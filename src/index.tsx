@@ -1,7 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import CdpPage from "./app/cdp/CdpPage";
 import HomePage from "./app/home/HomePage";
+
 import "./styles/index.css";
 
 const root = ReactDOM.createRoot(
@@ -9,6 +12,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <HomePage />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path=":uuid" element={<CdpPage />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );

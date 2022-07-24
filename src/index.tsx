@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import CdpPage from "./app/cdp/CdpPage";
 import HomePage from "./app/home/HomePage";
+import CdpProvider from "./state/Provider";
 
 import "./styles/index.css";
 
@@ -12,11 +13,13 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path=":uuid" element={<CdpPage />} />
-      </Routes>
-    </BrowserRouter>
+    <CdpProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path=":uuid" element={<CdpPage />} />
+        </Routes>
+      </BrowserRouter>
+    </CdpProvider>
   </React.StrictMode>
 );

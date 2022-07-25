@@ -1,4 +1,4 @@
-import { useContext, createContext } from "react";
+import { useContext, createContext, Dispatch, SetStateAction } from "react";
 
 import Cdp from "../lib/models/Cdp";
 
@@ -6,11 +6,10 @@ export type CdpContextType = {
   cdp: Cdp | undefined;
   nearestCdps: Cdp[];
   allCdps: Cdp[];
-  onCollateralChange: (collateral: string) => void;
-  onSingleSearch: (uuid: number) => void;
-  onNearestSearch: (data: Cdp | undefined) => void;
-  isError: boolean;
-  isLoading: boolean;
+  loading: boolean;
+  error: boolean;
+  onCollateralChange: Dispatch<SetStateAction<string>>;
+  onUuidChange: Dispatch<SetStateAction<number | undefined>>;
 };
 
 const CdpContext = createContext<CdpContextType | null>(null);

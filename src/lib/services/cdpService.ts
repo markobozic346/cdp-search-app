@@ -13,7 +13,7 @@ class CdpService {
     try {
       const res = await udpContract.methods.getCdpInfo(uuid).call();
 
-      return new Cdp(res);
+      return new Cdp({ uuid, ...res });
     } catch (err) {
       throw Error(`something went wrong ${err}`);
     }

@@ -6,14 +6,14 @@ import { collaterals } from "../../lib/constants";
 import { useCdpContext } from "../../state/context";
 
 const SearchCdp = () => {
-  const { onSingleSearch, onCollateralChange } = useCdpContext();
+  const { onCollateralChange, onUuidChange } = useCdpContext();
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     onCollateralChange(e.target.value);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onSingleSearch(Number(e.target.value));
+    onUuidChange(Number(e.target.value));
   };
 
   return (

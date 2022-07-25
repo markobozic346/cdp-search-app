@@ -1,4 +1,3 @@
-import { bytesToString } from "@defisaver/tokens/esm/utils";
 import { useState } from "react";
 
 import Cdp from "../lib/models/Cdp";
@@ -6,7 +5,6 @@ import { cdpService } from "../lib/services/cdpService";
 
 export type RoughCdpType = {
   uuid: number;
-  collateral: string;
 };
 
 const useCdp = () => {
@@ -14,18 +12,13 @@ const useCdp = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
-  const findRoughCdp = async (data: RoughCdpType) => {
+  const onSingleSearch = async (uuid: number) => {
+    setLoading(true);
     try {
-      setLoading(true);
-
-      const cdp = await cdpService.fetchSingleCdp(data.uuid);
-
-      if (bytesToString(cdp.ilk) !== "") {
-        setCdp(cdp);
-      }
+      const cdp = await cdpService.fetchSingleCdp(uuid);
+      setCdp(cdp);
     } catch (err) {
       setError(true);
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -34,7 +27,7 @@ const useCdp = () => {
     cdp,
     error,
     loading,
-    onSearch: findRoughCdp,
+    onSingleSearch,
   };
 };
 

@@ -1,6 +1,8 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 
+declare const window: any; // temp fix
+
 const initializeWeb3 = () => {
   const web3 = new Web3(window.ethereum);
   window.web3 = web3;

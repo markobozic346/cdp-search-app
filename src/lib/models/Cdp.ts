@@ -1,5 +1,7 @@
+import { bytesToString } from "@defisaver/tokens/esm/utils";
+
 class Cdp {
-  readonly uuid: string;
+  readonly uuid: number;
   readonly urn: string;
   readonly owner: string;
   readonly userAddr: string;
@@ -12,7 +14,7 @@ class Cdp {
     this.urn = data.urn;
     this.owner = data.owner;
     this.userAddr = data.userAddr;
-    this.ilk = data.ilk;
+    this.ilk = bytesToString(data.ilk);
     this.collateral = data.collateral;
     this.debt = data.debt;
   }

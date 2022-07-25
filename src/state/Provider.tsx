@@ -1,13 +1,41 @@
-import { PropsWithChildren } from "react";
-import useNearestCdps from "../hooks/useNearestCdps";
+import { PropsWithChildren, useEffect } from "react";
 
-import CdpContext, { useCdp } from "./context";
+import useNearestCdps from "../hooks/useNearestCdps";
+import useSingleCdp from "../hooks/useSingleCdp";
+
+import CdpContext from "./context";
 
 const CdpProvider = ({ children }: PropsWithChildren<unknown>) => {
-  const { cdp, onSearch } = useSingleCdp();
-  const { onCdpChange, nearestCdps } = useNearestCdps();
+  const { cdp, error, loading, onSingleSearch } = useSingleCdp();
+  const {
+    nearestCdps,
+    loading: nearestLoading,
+    onCollateralChange,
+    error: nearestError,
+    onNearestSearch,
+  } = useNearestCdps({});
 
-  return <CdpContext.Provider value={}>{children}</CdpContext.Provider>;
+  useEffect(() => {
+    // trigger nearest search on cdp change
+    onNearestSearch(cdp);
+  }, [cdp, onNearestSearch]);
+
+  const allCdps = cdp ? [cdp, ...nearestCdps] : nearestCdps;
+
+  const isError = error || nearestError;
+  const isLoading = loading || nearestLoading;
+
+  const value = {
+    cdp,
+    nearestCdps,
+    allCdps,
+    onSingleSearch,
+    onCollateralChange,
+    onNearestSearch,
+    isError,
+    isLoading,
+  };
+  return <CdpContext.Provider value={value}>{children}</CdpContext.Provider>;
 };
 
 export default CdpProvider;

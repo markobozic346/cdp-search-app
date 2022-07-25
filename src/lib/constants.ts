@@ -24,4 +24,6 @@ const cdpInfoContractAbi = [
   },
 ];
 
-export { cdpInfoContractAddress, cdpInfoContractAbi };
+const collaterals = ["ETH-A", "WBTC-A", "USDC-A"]; // there are many more but I guess search would take to long for smaller ones???
+
+export { cdpInfoContractAddress, cdpInfoContractAbi, collaterals };

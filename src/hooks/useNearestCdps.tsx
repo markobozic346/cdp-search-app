@@ -1,9 +1,7 @@
-import { bytesToString } from "@defisaver/tokens/esm/utils";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
+import Cdp from "../lib/models/Cdp";
 import { cdpService } from "../lib/services/cdpService";
-
-import { RoughCdpType } from "./useSingleCdp";
 
 type UseNearestCdpsProps = {
   noOfCdps?: number;
@@ -13,8 +11,11 @@ const useNearestCdps = ({
   noOfCdps = 19,
   maxRequestAtOnce = 5,
 }: UseNearestCdpsProps) => {
-  const [initialCdp, setInitialCpd] = useState<RoughCdpType>();
-  const [nearestCdps, setNearestCdps] = useState<any[]>([]);
+  const [initialCdp, setInitialCpd] = useState<Cdp>();
+  const [collateral, setCollateral] = useState<string>();
+  const [nearestCdps, setNearestCdps] = useState<Cdp[]>([]);
+  const [error, setError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     findNearestCdps();
@@ -22,47 +23,57 @@ const useNearestCdps = ({
   }, [initialCdp]);
 
   const findNearestCdps = async () => {
-    //skip if there is no initialCdp
     if (!initialCdp) {
       return;
     }
 
-    //set roughCdpUuid as starter position
     let larger = initialCdp.uuid;
     let smaller = initialCdp.uuid;
 
-    const tempArr = [] as number[]; // temporary array for new generated cdps
-    const finalArr = []; // final array for cdps with same collateral
+    const tempArr = [] as number[];
+    const finalArr = [] as Cdp[];
 
     //iterate through while requested number of cdps is not reached
     while (finalArr.length < noOfCdps) {
-      const shouldIncrease = tempArr.length % 2 === 0 || smaller === 0; // decides if the next cdp uuid should be larger or smaller
+      setLoading(true);
 
-      shouldIncrease ? tempArr.push(++larger) : tempArr.push(--smaller);
+      try {
+        const shouldIncrease = tempArr.length % 2 === 0 || smaller === 0; // decides if the next cdp uuid should be larger or smaller
 
-      // when there are enough cdps in the temp array, send a request
-      //TODO: move this to service
-      if (tempArr.length % maxRequestAtOnce === 0) {
-        const cdps = await cdpService.fetchMultipleCdp(tempArr);
+        shouldIncrease ? tempArr.push(++larger) : tempArr.push(--smaller);
 
-        // filter out cdps with same collateral and set to state
-        finalArr.push(
-          ...cdps.filter((cdp) => bytesToString(cdp.ilk) === "ETH-A")
-        );
-        setNearestCdps([...finalArr]);
+        // when there are enough cdps in the temp array, send a request
+        if (tempArr.length % maxRequestAtOnce === 0) {
+          const cdps = await cdpService.fetchMultipleCdp(tempArr);
 
-        // reset temp array
-        tempArr.length = 0;
+          finalArr.push(...cdps.filter((cdp) => cdp.ilk === collateral));
+
+          setNearestCdps([...finalArr]); // set filtered cdps to state
+
+          tempArr.length = 0; // reset temp array
+        }
+      } catch (err) {
+        setError(true);
+      } finally {
+        setLoading(false);
       }
     }
   };
 
-  const onCdpChange = (data: RoughCdpType | undefined) => {
+  const onNearestSearch = (data: Cdp | undefined) => {
     setInitialCpd(data);
   };
+
+  const onCollateralChange = (selectedCollateral: string) => {
+    setCollateral(selectedCollateral);
+  };
+
   return {
-    onCdpChange,
+    onNearestSearch,
+    onCollateralChange,
     nearestCdps,
+    loading,
+    error,
   };
 };
 

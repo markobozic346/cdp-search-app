@@ -1,15 +1,12 @@
-import { PropsWithChildren, useMemo, useState } from "react";
+import { PropsWithChildren, useState, useMemo } from "react";
 
-import { collaterals } from "../lib/constants";
-import Cdp from "../lib/models/Cdp";
-import { cdpService } from "../lib/services/cdpService";
+import { collaterals, noOfCdps, maxRequestAtOnce } from "../../lib/constants";
+import Cdp from "../../lib/models/Cdp";
+import { cdpService } from "../../lib/services/cdpService";
 
-import CdpContext from "./context";
+import CdpSearchContext from "./context";
 
-const maxRequestAtOnce = 5;
-const noOfCdps = 19;
-
-const CdpProvider = ({ children }: PropsWithChildren<unknown>) => {
+const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [collateral, setCollateral] = useState<string>(collaterals[0]);
   const [uuid, setUuid] = useState<number>();
   const [cdp, setCdp] = useState<Cdp>();
@@ -68,21 +65,19 @@ const CdpProvider = ({ children }: PropsWithChildren<unknown>) => {
   };
 
   useMemo(() => {
-    if (uuid) {
-      onSingleSearch(uuid);
-    }
+    uuid && onSingleSearch(uuid);
   }, [uuid]);
 
   useMemo(() => {
-    if (uuid) {
-      onNearestSearch({ uuid, collateral });
-    }
+    uuid && onNearestSearch({ uuid, collateral });
   }, [uuid, collateral]);
 
   const allCdps = cdp ? [cdp, ...nearestCdps] : [];
 
   const value = {
     cdp,
+    uuid,
+    collateral,
     nearestCdps,
     allCdps,
     loading,
@@ -90,7 +85,11 @@ const CdpProvider = ({ children }: PropsWithChildren<unknown>) => {
     onCollateralChange: setCollateral,
     onUuidChange: setUuid,
   };
-  return <CdpContext.Provider value={value}>{children}</CdpContext.Provider>;
+  return (
+    <CdpSearchContext.Provider value={value}>
+      {children}
+    </CdpSearchContext.Provider>
+  );
 };
 
-export default CdpProvider;
+export default CdpSearchProvider;

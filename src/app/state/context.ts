@@ -1,9 +1,11 @@
 import { useContext, createContext, Dispatch, SetStateAction } from "react";
 
-import Cdp from "../lib/models/Cdp";
+import Cdp from "../../lib/models/Cdp";
 
 export type CdpContextType = {
   cdp: Cdp | undefined;
+  uuid?: number;
+  collateral?: string;
   nearestCdps: Cdp[];
   allCdps: Cdp[];
   loading: boolean;
@@ -12,10 +14,10 @@ export type CdpContextType = {
   onUuidChange: Dispatch<SetStateAction<number | undefined>>;
 };
 
-const CdpContext = createContext<CdpContextType | null>(null);
+const CdpSearchContext = createContext<CdpContextType | null>(null);
 
 export const useCdpContext = () => {
-  const ctx = useContext(CdpContext);
+  const ctx = useContext(CdpSearchContext);
 
   if (!ctx) {
     throw Error("useCdp must be used within a CdpProvider");
@@ -23,4 +25,4 @@ export const useCdpContext = () => {
   return ctx;
 };
 
-export default CdpContext;
+export default CdpSearchContext;

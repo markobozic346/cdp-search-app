@@ -15,7 +15,11 @@ const SearchCdp = () => {
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onUuidChange(Number(e.target.value));
+    const uuid = parseInt(e.target.value);
+
+    if (uuid > 0 && typeof uuid === "number") {
+      onUuidChange(parseInt(e.target.value));
+    }
   };
 
   const SelectComponent = useMemo(

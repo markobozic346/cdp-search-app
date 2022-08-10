@@ -1,5 +1,13 @@
+import { Skeleton, Stack } from "@chakra-ui/react";
+
+import { cdpListItemCardProps } from "./UI";
+
 const Loader = () => {
-  return <div>Loader</div>;
+  return (
+    <Stack>
+      <Skeleton {...cdpListItemCardProps} />
+    </Stack>
+  );
 };
 
 export default Loader;

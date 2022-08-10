@@ -4,7 +4,7 @@ type SelectProps = {
   name: string;
   placeholder: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  value?: string;
+
   options: string[];
 };
 

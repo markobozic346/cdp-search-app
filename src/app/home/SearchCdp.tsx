@@ -1,12 +1,14 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, memo, useMemo } from "react";
+import { Box, Input, Select, Stack } from "@chakra-ui/react";
 import _ from "lodash";
 
-import { Input, Select } from "../../components";
 import { collaterals } from "../../lib/constants";
-import { useCdpContext } from "../../state/context";
+import { myInputProps } from "../../components/UI";
+import { useCdpContext } from "../state/context";
 
 const SearchCdp = () => {
-  const { onCollateralChange, onUuidChange } = useCdpContext();
+  const { uuid, collateral, onCollateralChange, onUuidChange } =
+    useCdpContext();
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     onCollateralChange(e.target.value);
@@ -16,22 +18,46 @@ const SearchCdp = () => {
     onUuidChange(Number(e.target.value));
   };
 
-  return (
-    <div>
+  const SelectComponent = useMemo(
+    () => (
       <Select
+        defaultValue={collateral}
         name="collateral"
-        placeholder="Select Collateral"
-        onChange={_.debounce(handleSelectChange, 500)}
-        options={collaterals}
-      />
+        onChange={handleSelectChange}
+        {...myInputProps}
+      >
+        {collaterals.map((collateral) => (
+          <option key={collateral} value={collateral}>
+            {collateral}
+          </option>
+        ))}
+      </Select>
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const InputComponent = useMemo(
+    () => (
       <Input
+        name="uuid"
         type="text"
-        name="uuid "
-        placeholder="Enter CDP UUID"
+        placeholder="uuid"
+        value={uuid}
         onChange={_.debounce(handleInputChange, 500)}
+        {...myInputProps}
       />
-    </div>
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  return (
+    <Stack spacing="4" direction="row">
+      <Box width="200px">{SelectComponent}</Box>
+      {InputComponent}
+    </Stack>
   );
 };
 
-export default SearchCdp;
+export default memo(SearchCdp);

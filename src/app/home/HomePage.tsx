@@ -1,21 +1,21 @@
-import { Loader } from "../../components";
-import { useCdpContext } from "../../state/context";
+import { Layout, Loader } from "../../components";
+import Title from "../../components/Title";
+import Error from "../../components/Error";
+import { useCdpContext } from "../state/context";
 
-import CdpList from "./CdpList";
+import CdpTable from "./CdpTable";
 import SearchCdp from "./SearchCdp";
 
 const HomePage = () => {
-  const { allCdps, loading } = useCdpContext();
-
-  console.log(loading);
+  const { allCdps, loading, error } = useCdpContext();
 
   return (
-    <div>
-      <h1>Defi challenge</h1>
+    <Layout>
+      <Title>Defi Challenge</Title>
       <SearchCdp />
-      <CdpList cdps={allCdps} />
+      {error ? <Error /> : <CdpTable cdps={allCdps} />}
       {loading && <Loader />}
-    </div>
+    </Layout>
   );
 };
 

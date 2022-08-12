@@ -12,9 +12,7 @@ const CdpTableRow: FC<CdpTableRowProps> = ({ cdp }) => {
   const statusColor = cdp.status === "Safe" ? "green.500" : "red.500";
   return (
     <LinkBox as={Tr} _hover={{ bg: "gray.200" }} role="group">
-      <LinkOverlay as="td" href={`${cdp.id}`}>
-        {cdp.id}
-      </LinkOverlay>
+      <LinkOverlay href={`${cdp.id}`}>{cdp.id}</LinkOverlay>
 
       <Td isNumeric>
         <Tooltip label={cdp.stringFullDebt}>{cdp.formatDebt}</Tooltip>

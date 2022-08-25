@@ -399,7 +399,7 @@ const currentPrices = {
   "USDC-A": 1.01,
 } as any;
 
-const noOfCdps = 19;
+const noOfCdps = 20;
 const maxRequestAtOnce = 5;
 
 export {

@@ -26,7 +26,8 @@ class Cdp {
   readonly urn: string;
   readonly owner: string;
   readonly userAddr: string;
-  readonly ilk: string;
+  readonly exist?: boolean;
+  readonly ilk?: string;
   readonly collateral: BigNumber;
   readonly debt: BigNumber;
   readonly rate: BigNumber;
@@ -48,6 +49,8 @@ class Cdp {
     this.collateralInUsd = new BigNumber(data.collateral).times(
       currentPrices[this.ilk]
     );
+    this.exist = Boolean(this.ilk);
+
     this.liquidationRatio = liqRatio[this.ilk] ? liqRatio[this.ilk] : 1;
     this.ratio = calculateRatio(this.collateralInUsd, this.debt);
     this.collPrice = currentPrices[this.ilk] ? currentPrices[this.ilk] : 0;

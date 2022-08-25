@@ -57,7 +57,7 @@ const SearchCdp = () => {
   );
 
   return (
-    <Stack spacing="4" direction="row">
+    <Stack spacing="4" direction="row" mb="4">
       <Box width="200px">{SelectComponent}</Box>
       {InputComponent}
     </Stack>

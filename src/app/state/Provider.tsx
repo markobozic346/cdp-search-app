@@ -11,6 +11,7 @@ const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [uuid, setUuid] = useState<number>();
   const [cdp, setCdp] = useState<Cdp>();
   const [nearestCdps, setNearestCdps] = useState<Cdp[]>([]);
+  const [notFound, setNotFound] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -19,7 +20,10 @@ const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
     setLoading(true);
     try {
       const cdp = await cdpService.fetchSingleCdp(uuid);
-      setCdp(cdp);
+
+      cdp.exist && setCdp(cdp);
+
+      setNotFound(!cdp.exist);
     } catch (err) {
       setError(true);
     } finally {
@@ -43,14 +47,15 @@ const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
 
       try {
         const shouldIncrease = tempArr.length % 2 === 0 || smaller === 0; // decides if the next cdp uuid should be larger or smaller
-
         shouldIncrease ? tempArr.push(++larger) : tempArr.push(--smaller);
 
         // when there are enough cdps in the temp array, send a request
         if (tempArr.length % maxRequestAtOnce === 0) {
           const cdps = await cdpService.fetchMultipleCdp(tempArr);
 
-          finalArr.push(...cdps.filter((cdp) => cdp.ilk === data.collateral));
+          finalArr.push(
+            ...cdps.filter((cdp) => cdp.ilk === data.collateral && cdp.exist)
+          ); // filter out the cdps that are not of the same ilk
 
           setNearestCdps([...finalArr]); // set filtered cdps to state
 
@@ -63,27 +68,37 @@ const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
       }
     }
   };
+  const removeCdps = () => {
+    setCdp(undefined);
+    setNearestCdps([]);
+  };
+
+  const onUuidChange = (uuid: number) => {
+    removeCdps();
+    setUuid(uuid);
+  };
 
   useMemo(() => {
     uuid && onSingleSearch(uuid);
   }, [uuid]);
 
   useMemo(() => {
-    uuid && onNearestSearch({ uuid, collateral });
-  }, [uuid, collateral]);
+    cdp && uuid && onNearestSearch({ uuid, collateral });
+  }, [cdp, uuid, collateral]);
 
-  const allCdps = cdp ? [cdp, ...nearestCdps] : [];
+  const allCdps = cdp ? [cdp, ...nearestCdps.slice(0, noOfCdps + 1)] : [];
 
   const value = {
     cdp,
     uuid,
+    notFound,
     collateral,
     nearestCdps,
     allCdps,
     loading,
     error,
     onCollateralChange: setCollateral,
-    onUuidChange: setUuid,
+    onUuidChange: onUuidChange,
   };
   return (
     <CdpSearchContext.Provider value={value}>

@@ -6,12 +6,13 @@ export type CdpContextType = {
   cdp: Cdp | undefined;
   uuid?: number;
   collateral?: string;
+  notFound?: boolean;
   nearestCdps: Cdp[];
   allCdps: Cdp[];
   loading: boolean;
   error: boolean;
   onCollateralChange: Dispatch<SetStateAction<string>>;
-  onUuidChange: Dispatch<SetStateAction<number | undefined>>;
+  onUuidChange: (uuid: number) => void;
 };
 
 const CdpSearchContext = createContext<CdpContextType | null>(null);

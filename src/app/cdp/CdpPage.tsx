@@ -1,39 +1,34 @@
 import { Box, Flex, Icon } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
-import { TiArrowBack } from "react-icons/ti";
-import { useEffect } from "react";
+import { FcUpLeft } from "react-icons/fc";
 
-import { Layout, Loader } from "../../components";
-import Title from "../../components/Title";
-import Error from "../../components/Error";
+import { Layout, Loader, Title, ErrorMessage } from "../../components";
 import { useCdpContext } from "../state/context";
 
 import CdpInfoCard from "./CdpInfoCard";
 
 const CdpPage = () => {
   const { id } = useParams();
-  const { cdp, loading, error, onUuidChange } = useCdpContext();
+  const { allCdps, loading, error } = useCdpContext();
 
   const cdpId = parseInt(id ? id : "0");
-  useEffect(() => {
-    onUuidChange(cdpId);
-  }, [cdpId, id, onUuidChange]);
+  const cdp = allCdps.find((cdp) => cdp.id === cdpId);
 
   return (
     <Layout>
       <Flex alignItems="center">
         <Link to="/">
           <Icon
-            as={TiArrowBack}
+            as={FcUpLeft}
             fontSize="5xl"
-            _hover={{ transform: "scale(1.5)" }}
+            _hover={{ transform: "scale(1.2)" }}
             transition="transform 0.2s ease-in-out"
           />
         </Link>
         <Title>{`${id} Cdp Info `}</Title>
       </Flex>
       <Box>{loading ? <Loader /> : <CdpInfoCard cdp={cdp} />}</Box>
-      {error && <Error />}
+      {error && <ErrorMessage />}
     </Layout>
   );
 };

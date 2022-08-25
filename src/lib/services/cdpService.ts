@@ -23,7 +23,9 @@ class CdpService {
     try {
       const res = await cdpContract.methods.getCdpInfo(id).call();
 
-      return new Cdp({ id, ...res });
+      const cdp = new Cdp({ id, ...res });
+
+      return cdp;
     } catch (err) {
       throw Error(`something went wrong ${err}`);
     }

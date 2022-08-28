@@ -1,18 +1,36 @@
-import { Box, Flex, Icon } from "@chakra-ui/react";
+import { Flex, Icon } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 import { FcUpLeft } from "react-icons/fc";
 
-import { Layout, Loader, Title, ErrorMessage } from "../../components";
+import {
+  Layout,
+  Loader,
+  Title,
+  ErrorWrapper,
+  NotFoundMessage,
+} from "../../components";
 import { useCdpContext } from "../state/context";
 
 import CdpInfoCard from "./CdpInfoCard";
 
 const CdpPage = () => {
   const { id } = useParams();
-  const { allCdps, loading, error } = useCdpContext();
+  const {
+    allCdps,
+    loading,
+    error,
+    cdp: fetchedCdp,
+    onSingleSearch,
+    notFound,
+  } = useCdpContext();
 
   const cdpId = parseInt(id ? id : "0");
-  const cdp = allCdps.find((cdp) => cdp.id === cdpId);
+  const existingCdp = allCdps.find((cdp) => cdp.id === cdpId);
+
+  if (!existingCdp) {
+    onSingleSearch(cdpId);
+  }
+  const cdp = existingCdp || fetchedCdp;
 
   return (
     <Layout>
@@ -27,8 +45,11 @@ const CdpPage = () => {
         </Link>
         <Title>{`${id} Cdp Info `}</Title>
       </Flex>
-      <Box>{loading ? <Loader /> : <CdpInfoCard cdp={cdp} />}</Box>
-      {error && <ErrorMessage />}
+
+      <ErrorWrapper isError={error}>
+        {loading ? <Loader /> : <CdpInfoCard cdp={cdp} />}
+        {notFound && <NotFoundMessage />}
+      </ErrorWrapper>
     </Layout>
   );
 };

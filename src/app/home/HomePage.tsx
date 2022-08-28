@@ -1,3 +1,5 @@
+import { memo, useEffect } from "react";
+
 import {
   Layout,
   Loader,
@@ -12,10 +14,18 @@ import CdpTable from "./CdpTable";
 import SearchCdp from "./SearchCdp";
 
 const HomePage = () => {
-  const { allCdps, loading, cdp, uuid, notFound, error } = useCdpContext();
+  const { loading, allCdps, cdp, notFound, error, onMultipleSearch } =
+    useCdpContext();
 
-  const firstTimeHere = Boolean(!uuid && !loading);
-  const cdpNotFound = Boolean(notFound && !loading);
+  const firstTimeHere = Boolean(!cdp?.id && !loading);
+
+  // when user manually enters cdp in url and returns from cdp page this will start nearest search
+  useEffect(() => {
+    const shouldStartSearch = cdp?.id && cdp.ilk && allCdps.length == 1;
+    shouldStartSearch && onMultipleSearch(cdp.id, cdp.ilk);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Layout>
       <Title>Defi Challenge</Title>
@@ -23,11 +33,11 @@ const HomePage = () => {
       <ErrorWrapper isError={error}>
         {cdp && <CdpTable cdps={allCdps} />}
         {firstTimeHere && <WelcomeMessage />}
-        {cdpNotFound && <NotFoundMessage />}
+        {notFound && <NotFoundMessage />}
         {loading && <Loader />}
       </ErrorWrapper>
     </Layout>
   );
 };
 
-export default HomePage;
+export default memo(HomePage);

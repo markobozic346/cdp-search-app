@@ -6,11 +6,10 @@ import Cdp from "../../lib/models/Cdp";
 import CdpTableHeader from "./CdpTableHeader";
 import CdpTableRow from "./CdpTableRow";
 
-type CdpTableProps = {
+type Props = {
   cdps: Cdp[];
 };
-
-const CdpTable = ({ cdps }: CdpTableProps) => {
+const CdpTable = ({ cdps }: Props) => {
   return (
     <TableContainer>
       <Table variant="simple">

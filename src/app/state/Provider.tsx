@@ -1,14 +1,12 @@
 import { PropsWithChildren, useState, useMemo } from "react";
 
-import { collaterals, noOfCdps, maxRequestAtOnce } from "../../lib/constants";
+import { noOfCdps, maxRequestAtOnce } from "../../lib/constants";
 import Cdp from "../../lib/models/Cdp";
 import { cdpService } from "../../lib/services/cdpService";
 
 import CdpSearchContext from "./context";
 
 const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
-  const [collateral, setCollateral] = useState<string>(collaterals[0]);
-  const [uuid, setUuid] = useState<number>();
   const [cdp, setCdp] = useState<Cdp>();
   const [nearestCdps, setNearestCdps] = useState<Cdp[]>([]);
   const [notFound, setNotFound] = useState<boolean>(false);
@@ -19,11 +17,10 @@ const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
   const onSingleSearch = async (uuid: number) => {
     setLoading(true);
     try {
-      const cdp = await cdpService.fetchSingleCdp(uuid);
+      const fetchedCdp = await cdpService.fetchSingleCdp(uuid);
+      setCdp(fetchedCdp.exist ? fetchedCdp : undefined);
 
-      cdp.exist && setCdp(cdp);
-
-      setNotFound(!cdp.exist);
+      setNotFound(!fetchedCdp?.exist);
     } catch (err) {
       setError(true);
     } finally {
@@ -31,7 +28,36 @@ const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
     }
   };
 
-  const onNearestSearch = async (data: {
+  const onMultipleSearch = useMemo(
+    () => (uuid: number, collateral: string) =>
+      multipleSearch(uuid, collateral),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const multipleSearch = async (uuid: number, collateral: string) => {
+    setLoading(true);
+
+    try {
+      const fetchedCdp = await cdpService.fetchSingleCdp(uuid);
+
+      setCdp(fetchedCdp.exist ? fetchedCdp : undefined);
+
+      setNotFound(!fetchedCdp.exist);
+
+      fetchedCdp.exist &&
+        findNearestCdps({
+          uuid,
+          collateral,
+        });
+    } catch (err) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const findNearestCdps = async (data: {
     uuid: number;
     collateral: string;
   }) => {
@@ -46,7 +72,7 @@ const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
       setLoading(true);
 
       try {
-        const shouldIncrease = tempArr.length % 2 === 0 || smaller === 0; // decides if the next cdp uuid should be larger or smaller
+        const shouldIncrease = tempArr.length % 2 === 0 || smaller === 0; // should increase if number is even or if smaller is
         shouldIncrease ? tempArr.push(++larger) : tempArr.push(--smaller);
 
         // when there are enough cdps in the temp array, send a request
@@ -68,38 +94,25 @@ const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
       }
     }
   };
-  const removeCdps = () => {
-    setCdp(undefined);
-    setNearestCdps([]);
-  };
 
-  const onUuidChange = (uuid: number) => {
-    removeCdps();
-    setUuid(uuid);
-  };
+  const allCdps = useMemo(
+    () => (cdp ? [cdp, ...nearestCdps.slice(0, noOfCdps + 1)] : []),
+    [cdp, nearestCdps]
+  );
 
-  useMemo(() => {
-    uuid && onSingleSearch(uuid);
-  }, [uuid]);
-
-  useMemo(() => {
-    cdp && uuid && onNearestSearch({ uuid, collateral });
-  }, [cdp, uuid, collateral]);
-
-  const allCdps = cdp ? [cdp, ...nearestCdps.slice(0, noOfCdps + 1)] : [];
-
-  const value = {
-    cdp,
-    uuid,
-    notFound,
-    collateral,
-    nearestCdps,
-    allCdps,
-    loading,
-    error,
-    onCollateralChange: setCollateral,
-    onUuidChange: onUuidChange,
-  };
+  const value = useMemo(
+    () => ({
+      cdp,
+      notFound: notFound && !loading,
+      nearestCdps,
+      allCdps,
+      loading,
+      error,
+      onSingleSearch: onSingleSearch,
+      onMultipleSearch: onMultipleSearch,
+    }),
+    [cdp, notFound, loading, nearestCdps, allCdps, error, onMultipleSearch]
+  );
   return (
     <CdpSearchContext.Provider value={value}>
       {children}

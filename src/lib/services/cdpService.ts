@@ -23,7 +23,9 @@ class CdpService {
     try {
       const res = await cdpContract.methods.getCdpInfo(id).call();
 
-      const cdp = new Cdp({ id, ...res });
+      const ilk = await this.fetchIlkRate(res.ilk);
+
+      const cdp = new Cdp({ id, rate: ilk.rate, ...res });
 
       return cdp;
     } catch (err) {

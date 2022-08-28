@@ -1,7 +1,7 @@
 import { bytesToString } from "@defisaver/tokens/esm/utils";
 import BigNumber from "bignumber.js";
 
-import { currentPrices, ilksRate, liqRatio } from "../constants";
+import { currentPrices, liqRatio } from "../constants";
 import {
   bigNumberFormatter,
   calculateRatio,
@@ -44,7 +44,7 @@ class Cdp {
     this.userAddr = data.userAddr;
     this.ilk = bytesToString(data.ilk);
     this.collateral = new BigNumber(data.collateral);
-    this.rate = new BigNumber(ilksRate[this.ilk] ? ilksRate[this.ilk] : 0);
+    this.rate = new BigNumber(data.rate);
     this.debt = new BigNumber(data.debt).times(this.rate);
     this.collateralInUsd = new BigNumber(data.collateral).times(
       currentPrices[this.ilk]

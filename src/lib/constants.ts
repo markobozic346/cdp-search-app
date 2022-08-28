@@ -387,11 +387,6 @@ const liqRatio = {
 
 const collaterals = ["ETH-A", "WBTC-A", "USDC-A"]; // there are many more but search would take to long for smaller ones???
 // hardcoded ilks for collaterals
-const ilksRate = {
-  "ETH-A": "1014610426007226529324502521",
-  "USDC-A": "1038015634068946408740555262",
-  "WBTC-A": "1070419972557879971767081132",
-} as any;
 
 const currentPrices = {
   "ETH-A": 1777.45,
@@ -405,7 +400,6 @@ const maxRequestAtOnce = 5;
 export {
   noOfCdps,
   liqRatio,
-  ilksRate,
   collaterals,
   currentPrices,
   ilksContractAbi,

@@ -6,6 +6,7 @@ declare const window: any; // temp fix
 const initializeWeb3 = () => {
   const web3 = new Web3(window.ethereum);
   window.web3 = web3;
+
   return web3;
 };
 

@@ -8,11 +8,9 @@ This project is created with React.js, react-router, TypeScript, ChakraUI, Web3.
 - [x] searches for 20 neares cdps by id and selected collateral
 - [x] cdp page with more information about cdps
 - [x] loaders & error messages & animations
-
-## left to be done:
-- [ ] connect with metamask
-- [ ] sign a message
-- [ ] calculate additional information such as max withdrawn without hitting collaterization
+- [x] connect with metamask
+- [x] sign a message
+- [x] calculate additional information such as max withdrawn without hitting collaterization, max debt
 
 
 ## to run the code visit link in the repo desc, or:

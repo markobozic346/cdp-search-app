@@ -1,17 +1,15 @@
-import { Flex, Icon } from "@chakra-ui/react";
-import { Link, useParams } from "react-router-dom";
-import { FcUpLeft } from "react-icons/fc";
+import { useParams } from "react-router-dom";
 
 import {
   Layout,
   Loader,
-  Title,
   ErrorWrapper,
   NotFoundMessage,
 } from "../../components";
-import { useCdpContext } from "../state/context";
+import { useCdpContext } from "../state/cdp-context";
 
 import CdpInfoCard from "./CdpInfoCard";
+import CdpPageHeader from "./CdpPageHeader";
 
 const CdpPage = () => {
   const { id } = useParams();
@@ -25,8 +23,11 @@ const CdpPage = () => {
   } = useCdpContext();
 
   const cdpId = parseInt(id ? id : "0");
+
+  // if user comes from home page find clicked cdp
   const existingCdp = allCdps.find((cdp) => cdp.id === cdpId);
 
+  //if user enters manually uuid in browser fetch it
   if (!existingCdp) {
     onSingleSearch(cdpId);
   }
@@ -34,18 +35,7 @@ const CdpPage = () => {
 
   return (
     <Layout>
-      <Flex alignItems="center">
-        <Link to="/">
-          <Icon
-            as={FcUpLeft}
-            fontSize="5xl"
-            _hover={{ transform: "scale(1.2)" }}
-            transition="transform 0.2s ease-in-out"
-          />
-        </Link>
-        <Title>{`${id} Cdp Info `}</Title>
-      </Flex>
-
+      <CdpPageHeader id={cdpId} />
       <ErrorWrapper isError={error}>
         {loading && <Loader {...loaderProps} />}
         {!notFound && !loading && <CdpInfoCard cdp={cdp} />}

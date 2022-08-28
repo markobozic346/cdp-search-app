@@ -6,12 +6,12 @@ import {
   ErrorWrapper,
   WelcomeMessage,
   NotFoundMessage,
-  Title,
 } from "../../components";
 import { cdpListItemCardProps } from "../../components/UI";
-import { useCdpContext } from "../state/context";
+import { useCdpContext } from "../state/cdp-context";
 
 import CdpTable from "./CdpTable";
+import HomePageHeader from "./HomePageHeader";
 import SearchCdp from "./SearchCdp";
 
 const HomePage = () => {
@@ -20,7 +20,7 @@ const HomePage = () => {
 
   const firstTimeHere = Boolean(!cdp?.id && !loading && !notFound);
 
-  // when user manually enters cdp in url and returns from cdp page this will start nearest search
+  // when user manually enters cdp in directly url and returns from cdp page this will start nearest search
   useEffect(() => {
     const shouldStartSearch = cdp?.id && cdp.ilk && allCdps.length == 1;
     shouldStartSearch && onMultipleSearch(cdp.id, cdp.ilk);
@@ -29,7 +29,7 @@ const HomePage = () => {
 
   return (
     <Layout>
-      <Title>Defi Challenge</Title>
+      <HomePageHeader />
       <SearchCdp />
       <ErrorWrapper isError={error}>
         {cdp && <CdpTable cdps={allCdps} />}

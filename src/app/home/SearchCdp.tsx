@@ -4,7 +4,7 @@ import _ from "lodash";
 
 import { collaterals } from "../../lib/constants";
 import { myInputProps } from "../../components/UI";
-import { useCdpContext } from "../state/context";
+import { useCdpContext } from "../state/cdp-context";
 
 const SearchCdp = () => {
   const { onMultipleSearch, cdp } = useCdpContext();

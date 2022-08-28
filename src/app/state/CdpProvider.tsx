@@ -4,9 +4,9 @@ import { noOfCdps, maxRequestAtOnce } from "../../lib/constants";
 import Cdp from "../../lib/models/Cdp";
 import { cdpService } from "../../lib/services/cdpService";
 
-import CdpSearchContext from "./context";
+import CdpSearchContext from "./cdp-context";
 
-const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
+const CdpProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [cdp, setCdp] = useState<Cdp>();
   const [nearestCdps, setNearestCdps] = useState<Cdp[]>([]);
   const [notFound, setNotFound] = useState<boolean>(false);
@@ -120,4 +120,4 @@ const CdpSearchProvider = ({ children }: PropsWithChildren<unknown>) => {
   );
 };
 
-export default CdpSearchProvider;
+export default CdpProvider;

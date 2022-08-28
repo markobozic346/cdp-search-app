@@ -13,10 +13,10 @@ export type CdpContextType = {
   error: boolean;
 };
 
-const CdpSearchContext = createContext<CdpContextType | null>(null);
+const CdpContext = createContext<CdpContextType | null>(null);
 
 export const useCdpContext = () => {
-  const ctx = useContext(CdpSearchContext);
+  const ctx = useContext(CdpContext);
 
   if (!ctx) {
     throw Error("useCdp must be used within a CdpProvider");
@@ -24,4 +24,4 @@ export const useCdpContext = () => {
   return ctx;
 };
 
-export default CdpSearchContext;
+export default CdpContext;

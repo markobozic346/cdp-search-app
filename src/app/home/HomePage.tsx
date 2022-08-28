@@ -17,7 +17,7 @@ const HomePage = () => {
   const { loading, allCdps, cdp, notFound, error, onMultipleSearch } =
     useCdpContext();
 
-  const firstTimeHere = Boolean(!cdp?.id && !loading);
+  const firstTimeHere = Boolean(!cdp?.id && !loading && !notFound);
 
   // when user manually enters cdp in url and returns from cdp page this will start nearest search
   useEffect(() => {

@@ -47,7 +47,8 @@ const CdpPage = () => {
       </Flex>
 
       <ErrorWrapper isError={error}>
-        {loading ? <Loader /> : <CdpInfoCard cdp={cdp} />}
+        {loading && <Loader />}
+        {!notFound && !loading && <CdpInfoCard cdp={cdp} />}
         {notFound && <NotFoundMessage />}
       </ErrorWrapper>
     </Layout>

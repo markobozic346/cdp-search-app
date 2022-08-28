@@ -47,7 +47,7 @@ const CdpPage = () => {
       </Flex>
 
       <ErrorWrapper isError={error}>
-        {loading && <Loader />}
+        {loading && <Loader {...loaderProps} />}
         {!notFound && !loading && <CdpInfoCard cdp={cdp} />}
         {notFound && <NotFoundMessage />}
       </ErrorWrapper>
@@ -55,4 +55,10 @@ const CdpPage = () => {
   );
 };
 
+const loaderProps = {
+  height: "180px",
+  borderRadius: "8px",
+  border: "1px solid",
+  borderColor: "ThreeDShadow",
+};
 export default CdpPage;

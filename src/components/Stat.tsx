@@ -3,6 +3,7 @@ import {
   StatLabel,
   StatNumber,
   StatHelpText,
+  StatLabelProps,
 } from "@chakra-ui/react";
 
 type Props = {
@@ -11,11 +12,11 @@ type Props = {
   subTitle?: string;
 };
 
-const Stat = ({ title, value, subTitle }: Props) => {
+const Stat = ({ title, value, subTitle, ...props }: Props & StatLabelProps) => {
   return (
     <ChakraStat maxWidth="150px">
       <StatLabel>{title}</StatLabel>
-      <StatNumber>{value}</StatNumber>
+      <StatNumber {...props}>{value}</StatNumber>
       <StatHelpText>{subTitle}</StatHelpText>
     </ChakraStat>
   );

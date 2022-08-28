@@ -1,11 +1,9 @@
-import { Skeleton, Stack } from "@chakra-ui/react";
+import { BoxProps, Skeleton, Stack } from "@chakra-ui/react";
 
-import { cdpListItemCardProps } from "./UI";
-
-const Loader = () => {
+const Loader = (props: BoxProps) => {
   return (
     <Stack>
-      <Skeleton {...cdpListItemCardProps} />
+      <Skeleton {...props} />
     </Stack>
   );
 };

@@ -389,8 +389,8 @@ const collaterals = ["ETH-A", "WBTC-A", "USDC-A"]; // there are many more but se
 // hardcoded ilks for collaterals
 
 const currentPrices = {
-  "ETH-A": 1777.45,
-  "WBTC-A": 23863.58,
+  "ETH-A": 1483.23,
+  "WBTC-A": 20006.04,
   "USDC-A": 1.01,
 } as any;
 

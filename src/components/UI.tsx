@@ -1,4 +1,4 @@
-import { StackProps } from "@chakra-ui/react";
+import { BoxProps, StackProps } from "@chakra-ui/react";
 
 const myInputProps = {
   height: "60px",
@@ -9,7 +9,7 @@ const cdpListItemCardProps = {
   borderRadius: "8px",
   border: "1px solid",
   borderColor: "ThreeDShadow",
-};
+} as BoxProps;
 
 const cdpListProps = {
   direction: ["row", "row", "row", "column", "column"],

@@ -36,6 +36,8 @@ class Cdp {
   readonly collPrice: number;
   readonly liquidationPrice: BigNumber;
   readonly liquidationRatio: number;
+  readonly maxDebt: BigNumber;
+  readonly maxWithdrawn: BigNumber;
 
   constructor(data: any) {
     this.id = data?.id;
@@ -50,7 +52,6 @@ class Cdp {
       currentPrices[this.ilk]
     );
     this.exist = Boolean(this.ilk);
-
     this.liquidationRatio = liqRatio[this.ilk] ? liqRatio[this.ilk] : 1;
     this.ratio = calculateRatio(this.collateralInUsd, this.debt);
     this.collPrice = currentPrices[this.ilk] ? currentPrices[this.ilk] : 0;
@@ -58,8 +59,21 @@ class Cdp {
     this.liquidationPrice = new BigNumber(this.debt)
       .times(this.liquidationRatio / 100)
       .div(this.collateral);
+
+    this.maxDebt = this.debt.multipliedBy(this.ratio / this.liquidationRatio);
+    this.maxWithdrawn = this.collateralInUsd.minus(
+      this.collateralInUsd.dividedBy(this.ratio / this.liquidationRatio)
+    );
   }
 
+  get formatMaxDebt() {
+    return `${readableFormatter(this.maxDebt)} DAI`;
+  }
+  get formatMaxWithdrawn() {
+    return `$${
+      this.maxWithdrawn.isNaN() ? 0 : readableFormatter(this.maxWithdrawn)
+    }`;
+  }
   get formatCollateral() {
     return `${readableFormatter(this.collateral)} ${this.ilk}`;
   }
@@ -77,7 +91,11 @@ class Cdp {
   }
 
   get formatLiquidationPrice() {
-    return `$${readableFormatter(this.liquidationPrice)}`;
+    return `$${
+      this.liquidationPrice.isNaN()
+        ? 0
+        : readableFormatter(this.liquidationPrice)
+    }`;
   }
 
   get formatRatio() {
@@ -92,6 +110,7 @@ class Cdp {
     if (this.liquidationRatio < this.ratio) return "Safe";
     if (this.liquidationRatio > this.ratio) return "Unsafe";
   }
+
   get formatCollateralInUsd() {
     return `$${readableFormatter(this.collateralInUsd)}`;
   }

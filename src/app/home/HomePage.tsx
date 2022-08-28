@@ -8,6 +8,7 @@ import {
   NotFoundMessage,
   Title,
 } from "../../components";
+import { cdpListItemCardProps } from "../../components/UI";
 import { useCdpContext } from "../state/context";
 
 import CdpTable from "./CdpTable";
@@ -34,7 +35,7 @@ const HomePage = () => {
         {cdp && <CdpTable cdps={allCdps} />}
         {firstTimeHere && <WelcomeMessage />}
         {notFound && <NotFoundMessage />}
-        {loading && <Loader />}
+        {loading && <Loader {...cdpListItemCardProps} />}
       </ErrorWrapper>
     </Layout>
   );

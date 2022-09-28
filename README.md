@@ -5,7 +5,7 @@ This project is created with React.js, react-router, TypeScript, ChakraUI, Web3.
 ## functionality:
 
 - [x] search for cdp by entered id
-- [x] searches for 20 neares cdps by id and selected collateral
+- [x] searches for 20 neares cdps by id and selected collateral & by sending 5 request at once
 - [x] cdp page with more information about cdps
 - [x] loaders & error messages & animations
 - [x] connect with metamask
